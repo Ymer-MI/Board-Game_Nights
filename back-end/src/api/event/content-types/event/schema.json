@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "Events"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "host": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::client.client",
+      "inversedBy": "events"
+    },
+    "location": {
+      "type": "string",
+      "maxLength": 64,
+      "required": true
+    },
+    "dateTime": {
+      "type": "datetime",
+      "required": true
+    },
+    "gameID": {
+      "type": "integer",
+      "required": true
+    },
+    "description": {
+      "type": "richtext",
+      "required": true
+    },
+    "token": {
+      "type": "string",
+      "minLength": 128,
+      "required": true,
+      "unique": true
+    },
+    "playersMin": {
+      "type": "integer"
+    },
+    "playersMax": {
+      "type": "integer"
+    },
+    "attendees": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::client.client"
+    }
+  }
+}

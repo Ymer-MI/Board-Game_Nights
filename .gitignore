@@ -1,0 +1,4 @@
+# user-specific files
+*.kra
+*.*~
+.vscode/
