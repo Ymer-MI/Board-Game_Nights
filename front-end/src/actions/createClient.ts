@@ -1,9 +1,13 @@
 import { z } from 'zod'
-import INIT_STATE, { IFormState } from '@/models/IFormState'
+import IFormState from '@/models/IFormState'
+import { BoardGameNightsAPI } from '@/services/boardGameNightsAPI'
+import JWTHelper from '@/helpers/JWTHelper'
+
+interface ICreateClientState extends IFormState<{ email?: string[], name?: string[], passWord?: string[], passConf?: string[] }, { email?: string, name?: string, passWord?: string, passConf?: string }> {}
 
 const createClientSchema = z.object({
     email: z.email({ error: 'Please enter a valid email address.' }),
-    name: z.string().min(2, { error: 'Please enter a valid user name.' }),
+    name: z.string().regex(/^(?!.*\s{2})(?=.{3,})[\p{L}\p{N}]+( [\p{L}\p{N}]+)$/u, { error: 'Please enter a valid user name using only letters, number and any of these special characters: ! - _ (no other special characters are allowed).' }),
     passWord: z.string().regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!?#%&+-_~])(?!.*[^A-Za-z0-9!?#%&+-_~]).{10,}$/, { error: `Please enter a valid password:\n1. At least 1 upper case character.\n2. At least 1 lower case character.\n3. At least one digit.\n4. At least one of these special characters: ! ? # % & + - _ ~ (no other special characters are allowed).\n5. At least 10 characters long.` }),
     passConf: z.string()
 }).superRefine(({ passWord, passConf }, ctx) => {
@@ -14,10 +18,32 @@ const createClientSchema = z.object({
         path: ['confirmPassword']
     });
   }
-})
+}), JWT = new JWTHelper(), API = new BoardGameNightsAPI()
 
-export default async function createClient(prevState: IFormState, formData: FormData) {
-    console.log(JSON.parse(`{${formData.entries().map(e => `"${[e[0]]}": "${e[1]}"`).toArray().join(',')}}`));
+export const CREATE_CLIENT_INIT_STATE = {
+    strapiErrors: undefined,
+    errorMessage: undefined,
+    successMessage: undefined,
+    zodErrors: undefined,
+    formData: {}
+} as ICreateClientState
 
-    return { ...prevState, ...INIT_STATE, successMessage: 'New user created successfully!' } satisfies IFormState as IFormState
+export default async function createClient(prevState: ICreateClientState, formData: FormData) {
+    const data = JSON.parse(`{${formData.entries().map(e => `"${[e[0]]}": "${e[1]}"`).toArray().join(',')}}`), validatedFields = createClientSchema.safeParse(data)
+
+    if (!validatedFields.success) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, zodErrors: validatedFields.error.flatten().fieldErrors, formData: { ...data } } as ICreateClientState
+
+    const { email, name, passWord } = validatedFields.data, token = await JWT.getToken(passWord)
+
+    console.log(token, `Token for "Trumpet01!": ${await JWT.getToken('Trumpet01!')}`, `Token for "MeepMeep01!": ${await JWT.getToken('MeepMeep01!')}`)
+
+    if(!token) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, errorMessage: `Failed to create a token.\nToke: ${ token }`, formData: { ...data } } as ICreateClientState
+
+    const respons = await API.createClient({ email, name, token })
+
+    if(!respons) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, errorMessage: 'Ops! Something went wrong. Please try again.', formData: { ...data } } as ICreateClientState
+
+    if(respons.error) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, strapiErrors: respons.error, errorMessage: 'Failed to create new user.', formData: { ...data } } as ICreateClientState
+
+    return { ...prevState, ...CREATE_CLIENT_INIT_STATE, successMessage: 'New user created successfully!' } as ICreateClientState
 }

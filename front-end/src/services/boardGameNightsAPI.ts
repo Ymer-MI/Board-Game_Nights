@@ -41,6 +41,10 @@ export class BoardGameNightsAPI {
 
     getClients = async () => await this.service.get<IStrapiResponse<IClient>>('/clients', this.populateClients)
 
+    createClient = async (data: any) => {
+        return { success: true, error: undefined }   
+    }
+
     logReadonly = () => {
         console.log(this.populateEvents, this.populateClients);
     }

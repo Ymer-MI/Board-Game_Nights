@@ -1,15 +1,12 @@
-export interface IFormState {
-    zodErrors: string | undefined
-    strapiErrors: string | undefined
-    errorMessage: string | undefined
-    successMessage: string | undefined
+export default interface IFormState<T, D> {
+    zodErrors?: T,
+    strapiErrors?: {
+        status: number
+        name: string
+        message: string
+        details: object
+    }
+    errorMessage?: string
+    successMessage?: string
+    formData: D
 }
-
-const INIT_STATE = {
-    zodErrors: undefined,
-    strapiErrors: undefined,
-    errorMessage: undefined,
-    successMessage: undefined
-} satisfies IFormState as IFormState
-
-export default INIT_STATE
