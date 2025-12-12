@@ -1,9 +1,7 @@
 import { z } from 'zod'
 import IFormState from '@/models/IFormState'
-import { BoardGameNightsAPI } from '@/services/boardGameNightsAPI'
-import JWTHelper from '@/helpers/JWTHelper'
-
-interface ICreateClientState extends IFormState<{ email?: string[], name?: string[], passWord?: string[], passConf?: string[] }, { email?: string, name?: string, passWord?: string, passConf?: string }> {}
+import { CREATE_CLIENT_INIT_STATE } from '@/components/CreateClientForm/CreateClientForm'
+import { getToken, createClient } from '@/helpers/serverFunctions'
 
 const createClientSchema = z.object({
     email: z.email({ error: 'Please enter a valid email address.' }),
@@ -18,28 +16,20 @@ const createClientSchema = z.object({
         path: ['confirmPassword']
     });
   }
-}), JWT = new JWTHelper(), API = new BoardGameNightsAPI()
+})
 
-export const CREATE_CLIENT_INIT_STATE = {
-    strapiErrors: undefined,
-    errorMessage: undefined,
-    successMessage: undefined,
-    zodErrors: undefined,
-    formData: {}
-} as ICreateClientState
+export interface ICreateClientState extends IFormState<{ email?: string[], name?: string[], passWord?: string[], passConf?: string[] }, { email?: string, name?: string, passWord?: string, passConf?: string }> {}
 
-export default async function createClient(prevState: ICreateClientState, formData: FormData) {
+export default async function createClientAction(prevState: ICreateClientState, formData: FormData) {
     const data = JSON.parse(`{${formData.entries().map(e => `"${[e[0]]}": "${e[1]}"`).toArray().join(',')}}`), validatedFields = createClientSchema.safeParse(data)
 
     if (!validatedFields.success) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, zodErrors: validatedFields.error.flatten().fieldErrors, formData: { ...data } } as ICreateClientState
 
-    const { email, name, passWord } = validatedFields.data, token = await JWT.getToken(passWord)
+    const { email, name, passWord } = validatedFields.data, token = await getToken(passWord)
 
-    console.log(token, `Token for "Trumpet01!": ${await JWT.getToken('Trumpet01!')}`, `Token for "MeepMeep01!": ${await JWT.getToken('MeepMeep01!')}`)
+    if(!token) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, errorMessage: `Failed to create a token.\nToken: ${ token }`, formData: { ...data } } as ICreateClientState
 
-    if(!token) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, errorMessage: `Failed to create a token.\nToke: ${ token }`, formData: { ...data } } as ICreateClientState
-
-    const respons = await API.createClient({ email, name, token })
+    const respons = await createClient({ email, name, token })
 
     if(!respons) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, errorMessage: 'Ops! Something went wrong. Please try again.', formData: { ...data } } as ICreateClientState
 

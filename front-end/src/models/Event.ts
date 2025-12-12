@@ -1,5 +1,5 @@
 import Client, { IClient } from '@/models/Client'
-import JWTHelper from '@/helpers/JWTHelper'
+import JWTHelper from '@/helpers/JWTHelper' 
 
 const JWT = new JWTHelper()
 

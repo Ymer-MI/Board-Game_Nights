@@ -1,5 +1,5 @@
 import { getBGGDB } from '@/lib/getBGGDB'
-import { BoardGameNightsAPI } from '@/services/boardGameNightsAPI'
+import BoardGameNightsAPI from '@/services/boardGameNightsAPI'
 import Event from '@/models/Event'
 import { LogButton } from '@/components/dev/LogButton'
 import ServerStatus from '@/components/dev/ServerStatus'

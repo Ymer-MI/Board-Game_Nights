@@ -8,7 +8,7 @@ const clientKeys = Object.keys({ name: '' } satisfies Omit<IClient, 'documentId'
     eventKeys = Object.keys({ location: '', dateTime: '', gameID: 0, description: '', token: '', playersMin: 0, playersMax: 0 } satisfies Omit<IEvent, 'documentId'>)
     
     
-export class BoardGameNightsAPI {
+export default class BoardGameNightsAPI {
     private readonly URL = process.env.DB_API_URL
     private readonly TOKEN = process.env.DB_API_TOKEN
     private readonly endpointPrefix = '/api'
