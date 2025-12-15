@@ -7,6 +7,10 @@
     --color--green: #00CE00;
     --color--green-dark: #00AF00;
 
+    --color--yellow-light: #ee0;
+
+    --color--red-light: #e00;
+
     --color--purple: #8000ff;
 
     --color--background: var(--color--black-dark);

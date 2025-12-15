@@ -1,5 +1,12 @@
+interface IData {
+    id: number
+    createdAt: Date
+    updatedAt: Date
+    publishedAt: Date
+}
+
 interface IMeta {
-    meta: {
+    meta?: {
         pagination: {
             page: number
             pageSize: number
@@ -9,13 +16,16 @@ interface IMeta {
     }
 }
 
-interface IData {
-    id: number
-    createdAt: Date
-    updatedAt: Date
-    publishedAt: Date
+
+interface IStrapiError {
+    error?: {
+        status: number
+        name: string
+        message: string
+        details: object
+    }
 }
 
-export default interface IStrapiResponse<T> extends IMeta {
-    data: (T & IData)[]
+export default interface IStrapiResponse<T> extends IMeta, IStrapiError {
+    data: (T & IData)[] | null
 }

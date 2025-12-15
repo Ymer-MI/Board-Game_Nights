@@ -14,8 +14,8 @@ export default async function Home() {
         <h1>Board Game Nights</h1>
         {/* <ServerStatus status={ await (async () => { const r = await DB.Strapi.ping(); r.status.toString().match(/^-1$/) && console.error('Error pinging server:', r.statusText); return r.status.toString().startsWith('2') && r.statusText.match(/^OK$/) ? 'Online' : 'Offline' })() }/> */}
         {/* <GamesList BGGDB={ BGGDB } itemsToDisplay={ 5 }/> */}
-        {/* <EventList events={ events } BGGDB={ BGGDB }/> */}
         {/* <LogButton str={JSON.stringify(BGGDB.getDB())}/> */}
+        <EventList events={ events } BGGDB={ BGGDB }/>
         <CreateClientForm/>
     </>
 }
