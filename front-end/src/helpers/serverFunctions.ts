@@ -5,14 +5,10 @@ import JWTHelper from '@/helpers/JWTHelper'
 
 const JWT = new JWTHelper(), API = new BoardGameNightsAPI()
 
-export async function getToken(str: string) {
-    return await JWT.getToken(str)
-}
+export const getToken = async (str: string) => await JWT.getToken(str)
 
-export async function getEvents() {
-    return await API.getEvents()
-}
+export const createEvent = async (data: IInputTypes['createEvent']) => await API.createEvent(data)
 
-export async function createClient(data: IInputTypes['createClient']) {
-    return await API.createClient(data)
-}
+export const getEvents = async () => await API.getEvents()
+
+export const createClient = async (data: IInputTypes['createClient']) => await API.createClient(data)
