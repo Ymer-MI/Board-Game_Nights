@@ -19,5 +19,5 @@ export class BaseService {
 
     get = async <T>(endpoint: string, params?: object) => (await this.ax.get<T>(endpoint, { params })).data
 
-    post = async <T>(endpoint: string, body: string) => (await this.ax.post<T>(endpoint, body, { headers: { 'Content-Type': 'application/json' } })).data
+    post = async <T>(endpoint: string, data: object) => (await this.ax.post<T>(endpoint, JSON.stringify({ data }), { headers: { 'Content-Type': 'application/json' } })).data
 }
