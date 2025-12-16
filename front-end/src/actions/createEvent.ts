@@ -1,14 +1,14 @@
 import { z } from 'zod'
-import IFormState from '@/models/IFormState'
-import { formatZodErrors, getFormData } from '@/helpers/actionHelpers'
-import { CREATE_EVENT_INIT_STATE } from '@/components/CreateEventForm/CreateEventForm'
 import { ZodFieldErrors } from '@/models/zodFieldErrors'
+import { formatZodErrors, getFormData } from '@/helpers/actionHelpers'
+import IFormState from '@/models/IFormState'
+import { CREATE_EVENT_INIT_STATE } from '@/components/CreateEventForm/CreateEventForm'
 import { createEvent, getClient, getToken, verifyToken } from '@/helpers/serverFunctions'
 import Client from '@/models/Client'
 
 const createEventSchema = z.object({
     email: z.email({ error: 'Please enter a valid email address.' }),
-    token: z.string().min(128, 'Token is to short, should be minimum 128 chars long. Did you copy and paste it correctly?'),
+    token: z.string().min(128, 'Token is to short, should be minimum 128 characters long. Did you copy and paste it correctly?'),
     location: z.string().regex(/^(?!.*\s{2})(?=.{3,64}$)[\p{L}\p{N}](?:[\p{L}\p{N},.]*[\p{L}\p{N},.]|[\p{L}\p{N}])$/u, { error: 'Please enter a valid user name using only letters, number, commas and punctations (no other special characters are allowed).\nIt must be between 3 - 64 characters long.' }),
     dateTime: z.date({ error: 'Please enter a valid date and time.' }),
     gameID: z.number({ error: 'Game ID must be a number.' }),

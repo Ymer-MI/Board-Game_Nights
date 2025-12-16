@@ -20,7 +20,8 @@ export default function CreateClientForm() {
     
     return <form id={ styles.createClient } ref={ ref } action={ formAction }>
         <div className={ styles.inputGroups }>
-            <InputGroup id='email' className={ styles.inputGroup } label='Email' type='email' defaultValue={{ value: formState?.formData?.email ?? '' }} error={ zodErrors?.email }/>
+            <InputGroup id='email' className={ styles.inputGroup } label='Host users email' type='email' defaultValue={{ value: formState?.formData?.email ?? '' }} error={ zodErrors?.email }/>
+            <InputGroup id='token' className={ styles.inputGroup } label='Host users token' type='text' defaultValue={{ value: formState.formData?.token ?? '' }} error={ zodErrors?.token }/>
             
             <InputGroup id='passWord' className={ styles.inputGroup } label='Password' type='password' defaultValue={{ value: formState?.formData?.passWord ?? '' }} error={ zodErrors?.passWord }/>
             <InputGroup id='passConf' className={ styles.inputGroup } label='Passsword Confirmation' type='password' defaultValue={{ value: formState?.formData?.passConf ?? '' }} error={ zodErrors?.passConf }/>
