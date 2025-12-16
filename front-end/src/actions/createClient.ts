@@ -2,6 +2,8 @@ import { z } from 'zod'
 import IFormState from '@/models/IFormState'
 import { CREATE_CLIENT_INIT_STATE } from '@/components/CreateClientForm/CreateClientForm'
 import { getToken, createClient } from '@/helpers/serverFunctions'
+import { formatZodErrors, getFormData } from '@/helpers/actionHelpers'
+import { ZodFieldErrors } from '@/models/zodFieldErrors'
 
 const createClientSchema = z.object({
     email: z.email({ error: 'Please enter a valid email address.' }),
@@ -13,17 +15,17 @@ const createClientSchema = z.object({
     ctx.addIssue({
         code: 'custom',
         message: 'The passwords did not match.',
-        path: ['confirmPassword']
+        path: ['passConf']
     });
   }
 })
 
-export interface ICreateClientState extends IFormState<{ email?: string[], name?: string[], passWord?: string[], passConf?: string[] }, { email?: string, name?: string, passWord?: string, passConf?: string }> {}
+export interface ICreateClientState extends IFormState<ZodFieldErrors<typeof createClientSchema.shape>, z.infer<typeof createClientSchema>> {}
 
 export default async function createClientAction(prevState: ICreateClientState, formData: FormData) {
-    const data = JSON.parse(`{${formData.entries().map(e => `"${[e[0]]}": "${e[1]}"`).toArray().join(',')}}`), validatedFields = createClientSchema.safeParse(data)
+    const data = getFormData(formData), validatedFields = createClientSchema.safeParse(data)
 
-    if (!validatedFields.success) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, zodErrors: validatedFields.error.flatten().fieldErrors, formData: { ...data } } as ICreateClientState
+    if (!validatedFields.success) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, zodErrors: formatZodErrors(z.treeifyError(validatedFields.error).properties), formData: { ...data } } as ICreateClientState
 
     const { email, name, passWord } = validatedFields.data, token = await getToken(passWord)
 

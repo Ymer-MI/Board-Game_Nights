@@ -5,10 +5,11 @@ import { IClient } from '@/models/Client'
 
 export interface IInputTypes {
     createClient: { email: string, name: string, token: string },
-    createEvent: { host: number, location: string, dateTime: Date, gameID: number, description: string, token: string, playersMin?: number, playersMax?:number }
+    getClient: { email:string },
+    createEvent: { host: { connect: string[] }, location: string, dateTime: Date, gameID: number, description: string, token: string, playersMin?: number, playersMax?:number }
 }
 
-const KEYS = { CLIENTS: Object.keys({ name: '' } satisfies Omit<IClient, 'documentId'>), EVENTS: Object.keys({ location: '', dateTime: '', gameID: 0, description: '', token: '', playersMin: 0, playersMax: 0 } satisfies Omit<IEvent, 'documentId'>) }
+const KEYS = { CLIENTS: Object.keys({ name: '', token: '' } satisfies Omit<IClient, 'documentId'>), EVENTS: Object.keys({ location: '', dateTime: '', gameID: 0, description: '', token: '', playersMin: 0, playersMax: 0 } satisfies Omit<IEvent, 'documentId'>) }
     
 export default class BoardGameNightsAPI {
     private readonly URL = process.env.DB_API_URL
@@ -27,6 +28,8 @@ export default class BoardGameNightsAPI {
     createClient = async (data: IInputTypes['createClient']) => await this.service.post<IStrapiResponse<IClient>>(this.ENDPOINTS.CLIENTS, data)
     
     getClients = async () => await this.service.get<IStrapiResponse<IClient>>(this.ENDPOINTS.CLIENTS, this.POPULATE.ClIENTS)
+
+    getClient = async (email: IInputTypes['getClient']['email']) => await this.service.get<IStrapiResponse<IClient>>(this.ENDPOINTS.CLIENTS, { filters: { email: { $eq: email } } })
 
     logReadonly = () => {
         console.log(this.POPULATE);

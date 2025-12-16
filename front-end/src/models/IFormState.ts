@@ -5,5 +5,5 @@ export default interface IFormState<T, D> {
     strapiErrors?: IStrapiResponse<unknown>['error']
     errorMessage?: string
     successMessage?: string
-    formData: D
+    formData?: D
 }

@@ -1,0 +1,40 @@
+#createClient {
+    --width--grid-items: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    padding: 1em;
+
+    > * {
+        width: 100%;
+    }
+
+    .inputGroups {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, var(--width--grid-items));
+        justify-content: stretch;
+        gap: 1em;
+
+        @media(min-width: 768px) {
+            justify-content: space-between;
+        }
+
+        .inputGroup {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: .1em;
+
+            @media (min-width: 768px) {
+                width: var(--width--grid-items);
+            }
+        }
+    }
+
+    .buttonRow {
+        display: flex;
+        justify-content: space-between;
+    }
+}

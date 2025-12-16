@@ -1,0 +1,3 @@
+export const getFormData = (formData: FormData) => JSON.parse(`{${formData.entries().map(e => `"${[e[0]]}": "${e[1]}"`).toArray().join(',')}}`)
+
+export const formatZodErrors = (zodErrors?: Record<string, { errors: string[] }>): Partial<Record<string, string[]>> | undefined => zodErrors && Object.fromEntries(Object.entries(zodErrors).filter(([, value]) => value?.errors?.length).map(([key, value]) => [key, value.errors]))
