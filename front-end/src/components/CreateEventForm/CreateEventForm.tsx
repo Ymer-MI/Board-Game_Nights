@@ -22,16 +22,16 @@ export default function CreateClientForm() {
     
     return <form id={ styles.createClient } ref={ ref } action={ formAction }>
         <div className={ styles.inputGroups }>
-            <InputGroup required id='email' className={ styles.inputGroup } label='Host users email' type='email' defaultValue={{ value: formState?.formData?.email ?? '' }} error={ zodErrors?.email }/>
-            <InputGroup required id='token' className={ styles.inputGroup } label='Host users token' type='text' defaultValue={{ value: formState.formData?.token ?? '' }} error={ zodErrors?.token }/>
-            <InputGroup required id='location' className={ styles.inputGroup } label='Location' type='text' defaultValue={{ value: formState.formData?.location ?? '' }} error={ zodErrors?.location }/>
-            <InputGroup required id='dateTime' className={ styles.inputGroup } label='Date & time' type='datetime-local' defaultValue={{ value: formState.formData?.dateTime.toISOString().slice(0, 16) ?? '' }} error={ zodErrors?.dateTime }/>
-            <InputGroup kind='search-select' required id='gameID' className={ styles.inputGroup } label='Board game' defaultValue={ formState.formData?.gameID } error={ zodErrors?.gameID } search={ async (q) => (await searchByName(q)).map(e => ({ label: e.getName(), value: e.getID() })) }/>
-            <InputGroup required id='descrption' className={ styles.inputGroup } label='Description' type='text' defaultValue={{ value: formState.formData?.description ?? '' }} error={ zodErrors?.description }/>
-            <InputGroup required id='passWord' className={ styles.inputGroup } label='Password' type='password' defaultValue={{ value: formState?.formData?.passWord ?? '' }} error={ zodErrors?.passWord }/>
-            <InputGroup required id='passConf' className={ styles.inputGroup } label='Passsword Confirmation' type='password' defaultValue={{ value: formState?.formData?.passConf ?? '' }} error={ zodErrors?.passConf }/>
-            <InputGroup id='playersMin' className={ styles.inputGroup } label='Minimum players (optional)' type='number' defaultValue={{ value: formState?.formData?.playersMin ?? '0' }} error={ zodErrors?.playersMin }/>
-            <InputGroup id='playersMax' className={ styles.inputGroup } label='Maximum players (optional)' type='number' defaultValue={{ value: formState?.formData?.playersMax ?? '0' }} error={ zodErrors?.playersMax }/>
+            <InputGroup required id='email' className={ styles.inputGroup } label='Host users email' type='email' defaultValue={{ value: formState?.formData?.email }} error={ zodErrors?.email }/>
+            <InputGroup required id='token' className={ styles.inputGroup } label='Host users token' type='text' defaultValue={{ value: formState.formData?.token }} error={ zodErrors?.token }/>
+            <InputGroup required id='location' className={ styles.inputGroup } label='Location' type='text' defaultValue={{ value: formState.formData?.location }} error={ zodErrors?.location }/>
+            <InputGroup required id='dateTime' className={ styles.inputGroup } label='Date & time' type='datetime-local' defaultValue={{ value: formState.formData?.dateTime.toISOString().slice(0, 16) }} error={ zodErrors?.dateTime }/>
+            <InputGroup kind='search-select' required id='gameID' className={ styles.inputGroup } label='Board game' defaultValue={ formState.formData?.gameID } error={ zodErrors?.gameID } search={ async (q) => await searchByName(q) } maxResults={ 25 }/>
+            <InputGroup required id='descrption' className={ styles.inputGroup } label='Description' type='text' defaultValue={{ value: formState.formData?.description }} error={ zodErrors?.description }/>
+            <InputGroup required id='passWord' className={ styles.inputGroup } label='Password' type='password' defaultValue={{ value: formState?.formData?.passWord }} error={ zodErrors?.passWord }/>
+            <InputGroup required id='passConf' className={ styles.inputGroup } label='Passsword Confirmation' type='password' defaultValue={{ value: formState?.formData?.passConf }} error={ zodErrors?.passConf }/>
+            <InputGroup id='playersMin' className={ styles.inputGroup } label='Minimum players (optional)' type='number' defaultValue={{ value: formState?.formData?.playersMin }} error={ zodErrors?.playersMin }/>
+            <InputGroup id='playersMax' className={ styles.inputGroup } label='Maximum players (optional)' type='number' defaultValue={{ value: formState?.formData?.playersMax }} error={ zodErrors?.playersMax }/>
         </div>
         <div className={ styles.buttonRow }>
             <button type='reset' onClick={() => { /*form.reset()*/ }}>Reset <Icon icon='system-uicons:reset'/></button>
