@@ -1,3 +1,5 @@
+'use server'
+
 import { cache } from 'react'
 import BGGDB, { type IBGGDBRow } from '@/models/BGGDB'
 import { join } from 'node:path'

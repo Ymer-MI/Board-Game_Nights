@@ -1,16 +1,18 @@
 import { useState, useDeferredValue, useEffect } from 'react'
 import MessageBox, { MESSAGETYPE } from '@/components/MessageBox/MessageBox'
+import { required } from 'zod/mini'
 
 interface IBaseProps {
     id: string
     label: string
     className?: string
+    required?: boolean
     error?: string[]
-    kind?: 'text' | 'search-select'
+    kind?: 'basic' | 'search-select'
 }
 
-interface ITextInputProps extends IBaseProps {
-    kind?: 'text'
+interface IBasicInputProps extends IBaseProps {
+    kind?: 'basic'
     type: HTMLInputElement['type']
     defaultValue?: {
         value?: string
@@ -18,45 +20,54 @@ interface ITextInputProps extends IBaseProps {
     }
 }
 
-interface ISelectInputProps<T> extends IBaseProps {
+interface ISelectInputProps extends IBaseProps {
     kind: 'search-select'
     minChars?: number
     maxResults?: number
-    search: searchFn<T>
-    onSelect: (item: ISearchResult<T>) => void
+    search: searchFn
+    defaultValue?: number | string
 }
 
-export type searchFn<T> = (query: string) => ISearchResult<T>[]
+export type searchFn = (query: string) => Promise<ISearchResult[]>
 
-export type IInputGroupProps<T = unknown> = ITextInputProps | ISelectInputProps<T>
+export type inputGroupProps = IBasicInputProps | ISelectInputProps
 
-export interface ISearchResult<T> { label: string, value: string | number, raw: T }
+export interface ISearchResult { label: string, value: number | string}
 
-function isTextInputProps<T>(props: IInputGroupProps<T>): props is ITextInputProps {
-    return props.kind !== 'search-select'
+function isBasicInputProps<T>(props: inputGroupProps): props is IBasicInputProps {
+    return props.kind === 'basic'
 }
 
-export default function InputGroup<T>(props: IInputGroupProps<T>) {
-    const { id, label, className, error } = props, [query, setQuery] = useState(''),
-    [results, setResults] = useState<ISearchResult<T>[]>([]), deferredQuery = useDeferredValue(query)
-    
+export default function InputGroup<T>(props: inputGroupProps) {
+    const { id, label, className, required, error } = props, [query, setQuery] = useState(isBasicInputProps(props) ? props.defaultValue?.value ?? '' : ''),
+    [results, setResults] = useState<ISearchResult[]>([]), deferredQuery = useDeferredValue(query)
+        
     useEffect(() => {
         if (props.kind === 'search-select') {
-            const { minChars = 3, maxResults = 10, search } = props
-            deferredQuery.length >= minChars ? setResults(search(deferredQuery).slice(0, maxResults)) : setResults([])
+            const { minChars = 3, maxResults = 10, search, defaultValue } = props
+            
+            let cancelled = false;
+
+            (async () => {
+                return query === '' && defaultValue != null && !cancelled ? 
+                    setQuery((await search('')).find(r => r.value === defaultValue)?.label ?? '') :
+                    deferredQuery.length < minChars && !cancelled ? setResults([]) :
+                    !cancelled ? setResults((await search(deferredQuery)).slice(0, maxResults)) : null
+            })()
+            
+            return () => { cancelled = true }
         }
     }, [deferredQuery, props])
 
-    return <div className={className}>
-        <label htmlFor={id}>{label}:</label>
-        { isTextInputProps(props) ? 
-            <input id={ id } name={ id } type={ props.type } required defaultValue={ props.defaultValue?.value } checked={ props.defaultValue?.checked }/>
+    return <div className={ className }>
+        <label htmlFor={ id }>{ label }:</label>
+        { isBasicInputProps(props) ? 
+            <input id={ id } name={ id } type={ props.type } required={ required } defaultValue={ props.defaultValue?.value } checked={ props.defaultValue?.checked }/>
         : <>
             <input id={ `${ id }-search` } type='text' value={ query } onChange={ e => setQuery(e.target.value) } placeholder={`Type at least ${ props.minChars ?? 3 } characters...`} autoComplete='off'/>
-            <select id={ id } onChange={e => {
+            <select id={ id } required={ required } value={ query } onChange={e => {
                 const item = results.find(r => String(r.value) === e.target.value)
                 if (item) {
-                props.onSelect(item)
                 setQuery(item.label)
                 }
             }} size={ results.length || 1 }>

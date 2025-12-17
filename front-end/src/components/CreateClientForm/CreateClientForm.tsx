@@ -20,10 +20,10 @@ export default function CreateClientForm() {
     
     return <form id={ styles.createClient } ref={ ref } action={ formAction }>
         <div className={ styles.inputGroups }>
-            <InputGroup id='email' className={ styles.inputGroup } label='Email' type='email' defaultValue={{ value: formState.formData?.email ?? '' }} error={ zodErrors?.email }/>
-            <InputGroup id='name' className={ styles.inputGroup } label='Username' type='text' defaultValue={{ value: formState.formData?.name ?? '' }} error={ zodErrors?.name }/>
-            <InputGroup id='passWord' className={ styles.inputGroup } label='Password' type='password' defaultValue={{ value: formState.formData?.passWord ?? '' }} error={ zodErrors?.passWord }/>
-            <InputGroup id='passConf' className={ styles.inputGroup } label='Passsword Confirmation' type='password' defaultValue={{ value: formState.formData?.passConf ?? '' }} error={ zodErrors?.passConf }/>
+            <InputGroup required id='email' className={ styles.inputGroup } label='Email' type='email' defaultValue={{ value: formState.formData?.email ?? '' }} error={ zodErrors?.email }/>
+            <InputGroup required id='name' className={ styles.inputGroup } label='Username' type='text' defaultValue={{ value: formState.formData?.name ?? '' }} error={ zodErrors?.name }/>
+            <InputGroup required id='passWord' className={ styles.inputGroup } label='Password' type='password' defaultValue={{ value: formState.formData?.passWord ?? '' }} error={ zodErrors?.passWord }/>
+            <InputGroup required id='passConf' className={ styles.inputGroup } label='Passsword Confirmation' type='password' defaultValue={{ value: formState.formData?.passConf ?? '' }} error={ zodErrors?.passConf }/>
         </div>
         <div className={ styles.buttonRow }>
             <button type='reset' onClick={() => { /*form.reset()*/ }}>Reset <Icon icon='system-uicons:reset'/></button>

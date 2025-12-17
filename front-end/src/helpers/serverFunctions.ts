@@ -1,9 +1,12 @@
 'use server'
 
-import BoardGameNightsAPI, { IInputTypes } from '@/services/boardGameNightsAPI'
 import JWTHelper from '@/helpers/JWTHelper'
+import { getBGGDB } from '@/lib/getBGGDB'
+import BoardGameNightsAPI, { IInputTypes } from '@/services/boardGameNightsAPI'
 
-const JWT = new JWTHelper(), API = new BoardGameNightsAPI()
+const DB = await getBGGDB(), JWT = new JWTHelper(), API = new BoardGameNightsAPI()
+
+export const searchByName = async (gameName: string) => DB.searchByName(gameName)
 
 export const getToken = async (str: string) => await JWT.getToken(str)
 
