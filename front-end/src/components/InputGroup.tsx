@@ -25,34 +25,52 @@ interface ISelectInputProps extends IBaseProps {
     minChars?: number
     maxResults?: number
     search: searchFn
-    defaultValue?: number | string
+    defaultValue?: number
+    onSelect?: (id: number) => void
 }
 
 export type searchFn = (query: string) => Promise<ISearchResult[]>
 
 export type inputGroupProps = IBasicInputProps | ISelectInputProps
 
-export interface ISearchResult { label: string, value: number | string}
+export interface ISearchResult { label: string, value: number }
 
 function isBasicInputProps<T>(props: inputGroupProps): props is IBasicInputProps {
-    return props.kind === 'basic'
+    return !('search' in props)
 }
 
 export default function InputGroup<T>(props: inputGroupProps) {
     const { id, label, className, required, error } = props, [query, setQuery] = useState(isBasicInputProps(props) ? props.defaultValue?.value ?? '' : ''),
-    [results, setResults] = useState<ISearchResult[]>([]), deferredQuery = useDeferredValue(query)
+    [results, setResults] = useState<ISearchResult[]>([]), deferredQuery = useDeferredValue(query),
+    [selectedId, setSelectedId] = useState<number | null>(null)
         
     useEffect(() => {
         if (props.kind === 'search-select') {
             const { minChars = 3, maxResults = 10, search, defaultValue } = props
-            
+
             let cancelled = false;
 
             (async () => {
-                return query === '' && defaultValue != null && !cancelled ? 
-                    setQuery((await search('')).find(r => r.value === defaultValue)?.label ?? '') :
-                    deferredQuery.length < minChars && !cancelled ? setResults([]) :
-                    !cancelled ? setResults((await search(deferredQuery)).slice(0, maxResults)) : null
+                if (cancelled) return
+
+                if (query === '' && defaultValue != null) {
+                    const item = (await search('')).find(r => r.value === defaultValue)
+
+                    if (item) {
+                        setQuery(item.label)
+                        setSelectedId(item.value)
+                        props.onSelect?.(item.value)
+                    }
+
+                    return
+                }
+
+                if (deferredQuery.length < minChars) {
+                    setResults([])
+                    return
+                }
+
+                setResults((await search(deferredQuery)).slice(0, maxResults))
             })()
             
             return () => { cancelled = true }
@@ -64,11 +82,14 @@ export default function InputGroup<T>(props: inputGroupProps) {
         { isBasicInputProps(props) ? 
             <input id={ id } name={ id } type={ props.type } required={ required } defaultValue={ props.defaultValue?.value } checked={ props.defaultValue?.checked }/>
         : <>
-            <input id={ `${ id }-search` } type='text' value={ query } onChange={ e => setQuery(e.target.value) } placeholder={`Type at least ${ props.minChars ?? 3 } characters...`} autoComplete='off'/>
+            <input id={ `${ id }-search` } type='text' value={ selectedId ?? '' } onChange={ e => setQuery(e.target.value) } placeholder={`Type at least ${ props.minChars ?? 3 } characters...`} autoComplete='off'/>
             <select id={ id } required={ required } value={ query } onChange={e => {
-                const item = results.find(r => String(r.value) === e.target.value)
+                const id = Number(e.target.value), item = results.find(r => r.value === id)
+
                 if (item) {
-                setQuery(item.label)
+                    setQuery(item.label)
+                    setSelectedId(id)
+                    props.onSelect?.(id)
                 }
             }} size={ results.length || 1 }>
             { results.length === 0 ? <option disabled>No matches</option> : results.map(r => (
