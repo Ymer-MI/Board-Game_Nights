@@ -18,4 +18,4 @@ export const getEvents = async () => await API.getEvents()
 
 export const createClient = async (data: IInputTypes['createClient']) => await API.createClient(data)
 
-export const getClient = async (email: IInputTypes['getClient']['email']) => await API.getClient(email)
+export const getClient = async (token: IInputTypes['getClient']['token']) => await API.getClient(token)

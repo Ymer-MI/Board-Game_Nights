@@ -5,7 +5,7 @@ import { IClient } from '@/models/Client'
 
 export interface IInputTypes {
     createClient: { email: string, name: string, token: string },
-    getClient: { email:string },
+    getClient: { token: string },
     createEvent: { host: { connect: string[] }, location: string, dateTime: Date, gameID: number, description: string, token: string, playersMin?: number, playersMax?:number }
 }
 
@@ -29,7 +29,7 @@ export default class BoardGameNightsAPI {
     
     getClients = async () => await this.service.get<IStrapiResponse<IClient>>(this.ENDPOINTS.CLIENTS, this.POPULATE.ClIENTS)
 
-    getClient = async (email: IInputTypes['getClient']['email']) => await this.service.get<IStrapiResponse<IClient>>(this.ENDPOINTS.CLIENTS, { filters: { email: { $eq: email } } })
+    getClient = async (token: IInputTypes['getClient']['token']) => await this.service.get<IStrapiResponse<IClient>>(this.ENDPOINTS.CLIENTS, { filters: { token: { $eq: token } } })
 
     logReadonly = () => {
         console.log(this.POPULATE);
