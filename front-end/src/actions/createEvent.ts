@@ -32,12 +32,10 @@ export default async function createEventAction(prevState: ICreateEventState, fo
         return { ...d, dateTime: new Date(dateTime), gameID: Number(gameID), playersMin: playersMin.length && Number(playersMin), playersMax: playersMax.length && Number(playersMax) }
     })(getFormData(formData)), validatedFields = createEventSchema.safeParse(data)
 
-    console.log(data)
-
     if(!validatedFields.success) return { ...prevState, ...CREATE_EVENT_INIT_STATE, zodErrors:  formatZodErrors(z.treeifyError(validatedFields.error).properties), formData: { ...data } } as ICreateEventState
 
     const { token, location, dateTime, gameID, description, passWord, playersMin, playersMax } = validatedFields.data,
-    eventToken = getToken(passWord), host = (await getClient(token)).data?.map(c => new Client(c))[0]
+    eventToken = await getToken(passWord), host = (await getClient(token)).data?.map(c => new Client(c))[0]
 
     if(!host) return { ...prevState, ...CREATE_EVENT_INIT_STATE, errorMessage: `Could not find user with token: ${ token }`, formData: { ...data } } as ICreateEventState
 
@@ -45,7 +43,7 @@ export default async function createEventAction(prevState: ICreateEventState, fo
 
     if(!eventToken) return { ...prevState, ...CREATE_EVENT_INIT_STATE, errorMessage: `Could not create a token.\nToken: ${ token }`, formData: { ...data } } as ICreateEventState
 
-    const respons = await createEvent({ host: { connect: [host.getDocumentId()] }, location, dateTime, gameID, description, token, playersMin, playersMax })
+    const respons = await createEvent({ host: { connect: [host.getDocumentId()] }, location, dateTime: dateTime.toISOString(), gameID, description, token: eventToken, playersMin, playersMax })
 
     if(!respons) return { ...prevState, ...CREATE_EVENT_INIT_STATE, errorMessage: 'Ops! Something went wrong. Please try again.', formData: { ...data } } as ICreateEventState
 

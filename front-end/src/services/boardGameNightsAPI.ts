@@ -6,7 +6,7 @@ import { IClient } from '@/models/Client'
 export interface IInputTypes {
     createClient: { email: string, name: string, token: string },
     getClient: { token: string },
-    createEvent: { host: { connect: string[] }, location: string, dateTime: Date, gameID: number, description: string, token: string, playersMin?: number, playersMax?:number }
+    createEvent: { host: { connect: string[] }, location: string, dateTime: ReturnType<Date['toISOString']>, gameID: number, description: string, token: string, playersMin?: number, playersMax?:number }
 }
 
 const KEYS = { CLIENTS: Object.keys({ name: '', token: '' } satisfies Omit<IClient, 'documentId'>), EVENTS: Object.keys({ location: '', dateTime: '', gameID: 0, description: '', token: '', playersMin: 0, playersMax: 0 } satisfies Omit<IEvent, 'documentId'>) }
