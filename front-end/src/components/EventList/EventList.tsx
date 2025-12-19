@@ -12,10 +12,13 @@ export default function EventList({ events, BGGDB}: { events: Event[], BGGDB: BG
                     { events.map(e => <li className={ styles.event } key={ e.getDocumentId() }>
                         <h4>{ BGGDB.findByID(e.getGameID())?.getName() } @{ e.getLocation() }</h4>
                         <div className={ styles.infoRow }>
-                            <span>Host: { e.getHost()?.getName() }</span>
+                            <span>Time: { e.getDateTime().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit'}) }</span>
                             <span>Players: { e.getPlayersMin() } - { e.getPlayersMax() }</span>
-                            <span>Time: { e.getDateTime().toLocaleTimeString() }</span>
+                            <span>Host: { e.getHost()?.getName() }</span>
                         </div>
+                        <section className={ `${ styles.description } hidden` }>
+                            Hello World!
+                        </section>
                     </li>) }
                 </ul>
             </li> ) }
