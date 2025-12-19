@@ -17,7 +17,7 @@ export default async function Home() {
         {/* <GamesList BGGDB={ BGGDB } itemsToDisplay={ 5 }/> */}
         {/* <LogButton str={JSON.stringify(BGGDB.getDB())}/> */}
         <EventList events={ events } BGGDB={ BGGDB }/>
-        <CreateClientForm/>
-        <CreateEventForm/>
+        {/* <CreateClientForm/> */}
+        {/* <CreateEventForm/> */}
     </>
 }
