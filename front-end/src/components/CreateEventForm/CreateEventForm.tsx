@@ -16,12 +16,12 @@ export const CREATE_EVENT_INIT_STATE: ICreateEventState = {
     formData: { token: '', location: '', dateTime: new Date(), gameID: 0, description: '', passWord: '', passConf: '', playersMin: undefined, playersMax: undefined }
 }
 
-export default function CreateClientForm() {
+export default function CreateEventForm() {
     const [formState, formAction] = useActionState(createEventAction, CREATE_EVENT_INIT_STATE), { zodErrors, errorMessage, successMessage } = formState, strapiErrors = formState?.strapiErrors?.message,
     ref = useRef<HTMLFormElement>(null), { 
         token, location, dateTime, gameID, description, passWord, passConf, playersMin, playersMax } = formState.formData
     
-    return <form id={ styles.createClient } ref={ ref } action={ formAction }>
+    return <form id={ styles.createEvent } ref={ ref } action={ formAction }>
         <div className={ styles.inputGroups }>
             <InputGroup required id='token' className={ styles.inputGroup } label='Host users token' type='text' defaultValue={{ value: token }} error={ zodErrors?.token }/>
             <InputGroup required id='location' className={ styles.inputGroup } label='Location' type='text' defaultValue={{ value: location }} error={ zodErrors?.location }/>
