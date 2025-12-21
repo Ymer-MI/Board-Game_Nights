@@ -1,25 +1,28 @@
-import BGGDB from '@/models/BGGDB'
-import Event from '@/models/Event'
-import styles from './eventList.module.css'
+'use client'
 
-export default function EventList({ events, BGGDB}: { events: Event[], BGGDB: BGGDB }) {
+import styles from './eventList.module.css'
+import { IBGGDBRow } from '@/models/BGGDB'
+import Event, { IEvent } from '@/models/Event'
+import { useEffect, useState } from 'react'
+import { getGameByID } from '@/helpers/serverFunctions'
+import EventItem from '@/components/EventList/EventItem'
+
+interface IGameList extends Omit<IBGGDBRow, 'yearPublished' | 'isExpansion'> {}
+
+export default function EventList({ events }: { events: IEvent[] }) {
+    const [gameList, setGameList] = useState<IGameList[]>([])
+
+    useEffect(() => {
+        !gameList.length && events.length && Promise.all(events.map(async e => getGameByID(e.gameID).then(n => ({ id: e.gameID, name: n ?? '' } satisfies IGameList)))).then(setGameList)
+    })
+
     return <section>
         <h2>Events:</h2>
         <ul className={ styles.dateList }>
             { Object.entries(Event.groupByDate(events)).map(([ date, events ]) => <li className={ styles.date } key={ date }>
                 <h3>{ date.slice(2).split('-').reverse().join('-').replace(/-/, '/') }</h3>
                 <ul className={ styles.eventList }>
-                    { events.map(e => <li className={ styles.event } key={ e.getDocumentId() }>
-                        <h4>{ BGGDB.findByID(e.getGameID())?.getName() } @{ e.getLocation() }</h4>
-                        <div className={ styles.infoRow }>
-                            <span>Time: { e.getDateTime().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit'}) }</span>
-                            <span>Players: { e.getPlayersMin() } - { e.getPlayersMax() }</span>
-                            <span>Host: { e.getHost()?.getName() }</span>
-                        </div>
-                        <section className={ `${ styles.description } hidden` }>
-                            Hello World!
-                        </section>
-                    </li>) }
+                    { events.map(e => <EventItem key={ e.documentId } event={ e } gameName={ gameList.find(g => g.id === e.gameID)?.name ?? 'Game name not found' }/>) }
                 </ul>
             </li> ) }
         </ul>

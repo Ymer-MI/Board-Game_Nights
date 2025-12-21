@@ -9,14 +9,14 @@ import CreateClientForm from '@/components/CreateClientForm/CreateClientForm'
 import CreateEventForm from '@/components/CreateEventForm/CreateEventForm'
 
 export default async function Home() {
-    const BGGDB = await getBGGDB(), events = (await getEvents()).data?.map(e => new Event(e)) ?? []
+    const BGGDB = await getBGGDB(), events = (await getEvents())?.data ?? []
 
     return <>
         <h1>Board Game Nights</h1>
         {/* <ServerStatus status={ await (async () => { const r = await DB.Strapi.ping(); r.status.toString().match(/^-1$/) && console.error('Error pinging server:', r.statusText); return r.status.toString().startsWith('2') && r.statusText.match(/^OK$/) ? 'Online' : 'Offline' })() }/> */}
         {/* <GamesList BGGDB={ BGGDB } itemsToDisplay={ 5 }/> */}
         {/* <LogButton str={JSON.stringify(BGGDB.getDB())}/> */}
-        <EventList events={ events } BGGDB={ BGGDB }/>
+        <EventList events={ events }/>
         {/* <CreateClientForm/> */}
         {/* <CreateEventForm/> */}
     </>

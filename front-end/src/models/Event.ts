@@ -41,15 +41,15 @@ export default class Event {
         this.attendees = attendees?.map(a => new Client(a))
     }
 
-    static groupByDate = (events: Event[]) => events.reduce((o, e) => {
-        const k = e.getDateTime().toISOString().split('T')[0]
+    static groupByDate = (events: IEvent[]) => events.reduce((o, e) => {
+        const k = new Date(e.dateTime).toISOString().split('T')[0]
 
         if(!o[k]) o[k] = []
 
         o[k].push(e)
 
         return o
-    }, {} as Record<string, Event[]>)
+    }, {} as Record<string, IEvent[]>)
 
     getDocumentId = () => this.documentId
     getLocation = () => this.location

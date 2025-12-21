@@ -2,9 +2,12 @@
 
 import JWTHelper from '@/helpers/JWTHelper'
 import { getBGGDB } from '@/lib/getBGGDB'
+import { IBGGDBRow } from '@/models/BGGDB'
 import BoardGameNightsAPI, { IInputTypes } from '@/services/boardGameNightsAPI'
 
 const DB = await getBGGDB(), JWT = new JWTHelper(), API = new BoardGameNightsAPI()
+
+export const getGameByID = async (id: IBGGDBRow['id']) => DB.findByID(id)?.getName()
 
 export const searchByName = async (gameName: string) => DB.searchByName(gameName).map(e => ({ label: e.getName(), value: e.getID() }))
 

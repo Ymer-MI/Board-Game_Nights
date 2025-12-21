@@ -39,24 +39,71 @@
                 }
             
                 .infoRow {
-                    display: flex;
-                    gap: var(--gap--default);
-            
-                    span {
-                        padding: calc(var(--padding--default) / 2) var(--padding--default);
-                        border-radius: calc(var(--border-radius--default) / 2);
-                        background: linear-gradient(var(--color--green-dark), var(--color--green-light), var(--color--green-dark));
-                        color: var(--color--black-dark);
-                        font-weight: bold;
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    align-items: center;
+                    
+                    > * {
+                        height: max-content;
+                    }
+
+                    > div {
+                        display: flex;
+                        gap: var(--gap--default);
+                        
+                        .bannerDetail {
+                            padding: calc(var(--padding--default) / 2) var(--padding--default);
+                            border-radius: calc(var(--border-radius--default) / 2);
+                            background: linear-gradient(var(--color--green-dark), var(--color--green-light), var(--color--green-dark));
+                            color: var(--color--black-dark);
+                            font-weight: bold;
+                        }
+                    }
+
+                    .detailsClosed {
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        &.hidden {
+                            display: none;
+                        }
                     }
                 }
-
+                
                 .description {
+                    border-top: 2px solid var(--color--green-dark);
+                    padding-top: .5em;
                     
                     &.hidden {
                         display: none;
                     }
+
+                    .attendeeRow {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+
+                        .detailsOpened {
+                            width: 100%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+        
+                            &.hidden {
+                                display: none;
+                            }
+                        }
+
+                        .attendContainer {
+                            display: flex;
+                            justify-content: end;
+                        }
+                    }
                 }
+
+                
             }
         }
     
