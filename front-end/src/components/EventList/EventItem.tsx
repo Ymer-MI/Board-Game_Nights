@@ -1,7 +1,7 @@
 import styles from './eventList.module.css'
 import buttonStyles from './detailsButton.module.css'
 import { IEvent } from '@/models/Event'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Icon } from '@iconify/react'
 import { IBGGDBRow } from '@/models/BGGDB'
 import DetailsButton from './DetailsButton'
@@ -26,12 +26,14 @@ export default function EventItem({ event, gameName }: { event: IEvent, gameName
                 { event.description }
             </p>
             <div className={ styles.attendeeRow }>
-                <span>Attending: { event.attendees?.map((c, i, a) => <><span key={ c.documentId }>{ c.name }</span>{ i !== --a.length && ','}</>) }</span>
+                <p>Attending: { event.attendees?.map((c, i, a) => <React.Fragment  key={ c.documentId }><span>{ c.name }</span>{ i !== --a.length && ','}</React.Fragment>) }</p>
                 <div>
-                    <DetailsButton className={ !isDetailsOpened && buttonStyles.hidden } icon='system-uicons:push-up' onClick={ toggleDetails }/>
-                </div>
-                <div className={ styles.attendContainer }>
-                    <button onClick={() => { console.log('Attending') }}>Attend<Icon icon='system-uicons:write'></Icon></button>
+                    <div>
+                        <DetailsButton icon='system-uicons:push-up' onClick={ toggleDetails }/>
+                    </div>
+                    <div className={ styles.attendContainer }>
+                        <button onClick={() => { console.log('Attending') }}>Attend<Icon icon='system-uicons:write'></Icon></button>
+                    </div>
                 </div>
             </div>
         </section>
