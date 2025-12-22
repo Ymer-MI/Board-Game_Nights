@@ -89,9 +89,18 @@ body {
     }
 
     button {
+        width: fit-content;
+        height: fit-content;
         display: flex;
-        font-size: 1.25em;
         align-items: center;
+        padding: .25em;
+        font-size: 1.25em;
         gap: .5em;
+        cursor: pointer;
+
+        > svg {
+            width: 1em;
+            height: 1em;
+        }
     }
 }

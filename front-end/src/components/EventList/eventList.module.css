@@ -31,7 +31,6 @@
                 border-radius: var(--border-radius--default);
                 background-color: color-mix(in srgb, var(--color--purple), transparent 50%);
                 color: var(--color--green-light);
-                cursor: pointer;
             
                 h4 {
                     text-align: left;
@@ -42,15 +41,16 @@
                     width: 100%;
                     display: grid;
                     grid-template-columns: repeat(3, 1fr);
-                    align-items: center;
-                    
-                    > * {
-                        height: max-content;
-                    }
 
                     > div {
+                        height: 100%;
                         display: flex;
+                        align-items: center;
                         gap: var(--gap--default);
+
+                        &:nth-child(2) {
+                            justify-content: center;
+                        }
                         
                         .bannerDetail {
                             padding: calc(var(--padding--default) / 2) var(--padding--default);
@@ -58,17 +58,6 @@
                             background: linear-gradient(var(--color--green-dark), var(--color--green-light), var(--color--green-dark));
                             color: var(--color--black-dark);
                             font-weight: bold;
-                        }
-                    }
-
-                    .detailsClosed {
-                        width: 100%;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-
-                        &.hidden {
-                            display: none;
                         }
                     }
                 }
@@ -84,21 +73,28 @@
                     .attendeeRow {
                         display: grid;
                         grid-template-columns: repeat(3, 1fr);
+                        align-items: center;
 
-                        .detailsOpened {
-                            width: 100%;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-        
-                            &.hidden {
-                                display: none;
+                        > * {
+                            height: max-content;
+
+                            &:nth-child(2) {
+                                display: flex;
+                                justify-content: center;
                             }
+                        }
+
+                        > span {
+                            display: inline;
                         }
 
                         .attendContainer {
                             display: flex;
                             justify-content: end;
+
+                            button {
+                                font-size: 1em;
+                            }
                         }
                     }
                 }
