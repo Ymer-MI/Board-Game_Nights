@@ -3,6 +3,7 @@
 import JWTHelper from '@/helpers/JWTHelper'
 import { getBGGDB } from '@/lib/getBGGDB'
 import { IBGGDBRow } from '@/models/BGGDB'
+import { IEvent } from '@/models/Event'
 import BoardGameNightsAPI, { IInputTypes } from '@/services/boardGameNightsAPI'
 
 const DB = await getBGGDB(), JWT = new JWTHelper(), API = new BoardGameNightsAPI()
@@ -18,6 +19,8 @@ export const verifyToken = async (str: string, token: string) => await JWT.verif
 export const createEvent = async (data: IInputTypes['createEvent']) => await API.createEvent(data)
 
 export const getEvents = async () => await API.getEvents()
+
+export const attendEvent = async (id: IEvent['documentId'], data: IInputTypes['attendEvent']) => await API.attendEvent(id, data)
 
 export const createClient = async (data: IInputTypes['createClient']) => await API.createClient(data)
 

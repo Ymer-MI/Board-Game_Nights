@@ -1,0 +1,54 @@
+.attendEvent {
+    --width--grid-items: 200px;
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 1em;
+
+    @media (min-width: 768px) {
+        width: fit-content;
+        flex-direction: row;
+    }
+
+    > * {
+        width: 100%;
+    }
+
+    .inputGroups {
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-content: stretch;
+        gap: 1em;
+
+        @media(min-width: 768px) {
+            grid-template-columns: repeat(auto-fit, var(--width--grid-items));
+        }
+
+        .inputGroup {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: .1em;
+
+            @media (min-width: 768px) {
+                width: var(--width--grid-items);
+            }
+
+            > input {
+                height: 1.75em;
+            }
+        }
+    }
+
+    .buttonRow {
+        display: flex;
+        justify-content: space-between;
+        gap: 1em;
+
+        button {
+            font-size: 1em;
+        }
+    }
+}

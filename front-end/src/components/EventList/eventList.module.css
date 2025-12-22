@@ -106,7 +106,7 @@
 
                         @media (min-width: 768px) {
                             flex-direction: row;
-                            align-items: center;
+                            align-items: end;
 
                             > p {
                                 flex: 1;
@@ -116,8 +116,17 @@
                                 flex-direction: row;
                                 flex: 2;
 
-                                > div.attendContainer {
-                                    justify-content: end;
+                                > div {
+                                    align-items: end;
+
+                                    > button {
+                                        width: 100%;
+                                        justify-content: center;
+                                    }
+
+                                    &.attendContainer {
+                                        justify-content: end;
+                                    }
                                 }
                             }
                         }

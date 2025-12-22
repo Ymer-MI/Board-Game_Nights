@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { Icon } from '@iconify/react'
 import { IBGGDBRow } from '@/models/BGGDB'
 import DetailsButton from './DetailsButton'
+import AttendEventForm from '../AttendForm/AttendEventForm'
 
 export default function EventItem({ event, gameName }: { event: IEvent, gameName: IBGGDBRow['name'] }) {
     const [isDetailsOpened, setIsDetailsOpened] = useState(false), toggleDetails = () => { setIsDetailsOpened(!isDetailsOpened) }
@@ -32,7 +33,7 @@ export default function EventItem({ event, gameName }: { event: IEvent, gameName
                         <DetailsButton icon='system-uicons:push-up' onClick={ toggleDetails }/>
                     </div>
                     <div className={ styles.attendContainer }>
-                        <button onClick={() => { console.log('Attending') }}>Attend<Icon icon='system-uicons:write'></Icon></button>
+                        <AttendEventForm event={ event }/>
                     </div>
                 </div>
             </div>

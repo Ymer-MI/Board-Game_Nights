@@ -39,7 +39,7 @@ export default async function createEventAction(prevState: ICreateEventState, fo
 
     if(!host) return { ...prevState, ...CREATE_EVENT_INIT_STATE, errorMessage: `Could not find user with token: ${ token }`, formData: { ...data } } as ICreateEventState
 
-    if(!verifyToken(token, host.getToken())) return { ...prevState, ...CREATE_EVENT_INIT_STATE, errorMessage: `Could not verify token. Please check it and try entering it again.`, formData: { ...data } } as ICreateEventState
+    if(!await verifyToken(token, host.getToken())) return { ...prevState, ...CREATE_EVENT_INIT_STATE, errorMessage: `Could not verify token. Please check it and try entering it again.`, formData: { ...data } } as ICreateEventState
 
     if(!eventToken) return { ...prevState, ...CREATE_EVENT_INIT_STATE, errorMessage: `Could not create a token.\nToken: ${ token }`, formData: { ...data } } as ICreateEventState
 

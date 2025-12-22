@@ -16,8 +16,8 @@ export const CREATE_CLIENT_INIT_STATE: ICreateClientState = {
 }
 
 export default function CreateClientForm() {
-    const [formState, formAction] = useActionState(createClientAction, CREATE_CLIENT_INIT_STATE), { zodErrors, errorMessage, successMessage } = formState, strapiErrors = formState.strapiErrors?.message,
-    ref = useRef<HTMLFormElement>(null), { email, name, passWord, passConf } = formState.formData
+    const [formState, formAction] = useActionState(createClientAction, CREATE_CLIENT_INIT_STATE), { zodErrors, errorMessage, successMessage } = formState,
+    strapiErrors = formState.strapiErrors?.message, ref = useRef<HTMLFormElement>(null), { email, name, passWord, passConf } = formState.formData
     
     return <form id={ styles.createClient } ref={ ref } action={ formAction }>
         <div className={ styles.inputGroups }>
