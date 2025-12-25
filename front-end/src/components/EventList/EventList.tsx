@@ -22,7 +22,7 @@ export default function EventList({ events }: { events: IEvent[] }) {
             { Object.entries(Event.groupByDate(events)).map(([ date, events ]) => <li className={ styles.date } key={ date }>
                 <h3>{ date.slice(2).split('-').reverse().join('-').replace(/-/, '/') }</h3>
                 <ul className={ styles.eventList }>
-                    { events.map(e => <EventItem key={ e.documentId } event={ e } gameName={ gameList.find(g => g.id === e.gameID)?.name ?? 'Game name not found' }/>) }
+                    { events.map(e => <EventItem key={ e.documentId } eventIn={ e } gameName={ gameList.find(g => g.id === e.gameID)?.name ?? 'Game name not found' }/>) }
                 </ul>
             </li> ) }
         </ul>

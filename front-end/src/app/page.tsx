@@ -1,5 +1,4 @@
-import { getBGGDB } from '@/lib/getBGGDB'
-import Event from '@/models/Event'
+import { IEvent } from '@/models/Event'
 import { getEvents } from '@/helpers/serverFunctions'
 import { LogButton } from '@/components/dev/LogButton'
 import ServerStatus from '@/components/dev/ServerStatus'
@@ -9,7 +8,7 @@ import CreateClientForm from '@/components/CreateClientForm/CreateClientForm'
 import CreateEventForm from '@/components/CreateEventForm/CreateEventForm'
 
 export default async function Home() {
-    const BGGDB = await getBGGDB(), events = (await getEvents())?.data ?? []
+    const events = (await getEvents())?.data as IEvent[] ?? []
 
     return <>
         <h1>Board Game Nights</h1>

@@ -29,8 +29,8 @@ export interface ICreateEventState extends IFormState<ZodFieldErrors<typeof crea
 export default async function createEventAction(prevState: ICreateEventState, formData: FormData) {
     const data = (d => { 
         const { dateTime, gameID, playersMin, playersMax } = d
-        return { ...d, dateTime: new Date(dateTime), gameID: Number(gameID), playersMin: playersMin.length && Number(playersMin), playersMax: playersMax.length && Number(playersMax) }
-    })(getFormData(formData)), validatedFields = createEventSchema.safeParse(data)
+        return { ...d, dateTime: new Date(dateTime), gameID: Number(gameID), playersMin: playersMin ? Number(playersMin) : undefined, playersMax: playersMax ?  Number(playersMax) : undefined }
+    })(getFormData<ICreateEventState['formData']>(formData)), validatedFields = createEventSchema.safeParse(data)
 
     if(!validatedFields.success) return { ...prevState, ...CREATE_EVENT_INIT_STATE, zodErrors:  formatZodErrors(z.treeifyError(validatedFields.error).properties), formData: { ...data } } as ICreateEventState
 

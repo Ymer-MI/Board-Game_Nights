@@ -4,32 +4,38 @@ import IFormState from '@/models/IFormState'
 import { formatZodErrors, getFormData } from '@/helpers/actionHelpers'
 import { ATTEND_EVENT_INIT_STATE } from '@/components/AttendForm/AttendEventForm'
 import { attendEvent, getClient, verifyToken } from '@/helpers/serverFunctions'
-import Client from '@/models/Client'
-import { id } from 'zod/locales'
+import Client, { IClient } from '@/models/Client'
+import { IEvent } from '@/models/Event'
+import IStrapiResponse from '@/models/IStrapiResponse'
 
 const attendEventSchema = z.object({
-    id: z.string(),
+    event: z.string(),
     token: z.string().min(128, { error: 'Token is to short. make sure you entered the entire token.' })
 })
 
-export interface IAttendEventState extends IFormState<ZodFieldErrors<typeof attendEventSchema.shape>, z.infer<typeof attendEventSchema>> {}
+export interface IAttendEventState extends IFormState<ZodFieldErrors<typeof attendEventSchema.shape>, { event: IEvent | undefined, token: IClient['token'] }> {
+    updatedEvent?: IEvent
+}
 
-export default async function attendEventAction(prevState: IAttendEventState, formData: FormData) {
-    const data = getFormData(formData), validatedFields = attendEventSchema.safeParse(data)
+export default async function attendEventAction(_: IAttendEventState, formData: FormData) {
+    const data = getFormData<IAttendEventState['formData']>(formData), validatedFields = attendEventSchema.safeParse({ ...data, event: JSON.stringify(data.event) })
+    if (!validatedFields.success) return { ...ATTEND_EVENT_INIT_STATE, zodErrors: formatZodErrors(z.treeifyError(validatedFields.error).properties), formData: { ...data } } satisfies IAttendEventState as IAttendEventState
 
-    if (!validatedFields.success) return { ...prevState, ...ATTEND_EVENT_INIT_STATE, zodErrors: formatZodErrors(z.treeifyError(validatedFields.error).properties), formData: { ...data } } satisfies IAttendEventState as IAttendEventState
+    const { token } = data, event = data.event as IEvent, client = ((await getClient(token)).data as IClient[])?.map(c => new Client(c))[0]
 
-    const { id, token } = data, client = (await getClient(token)).data?.map(c => new Client(c))[0]
+    if (!client) return { ...ATTEND_EVENT_INIT_STATE, errorMessage: `Could not find user with token: ${ token }`, formData: { ...data } } satisfies IAttendEventState as IAttendEventState
 
-    if (!client) return { ...prevState, ...ATTEND_EVENT_INIT_STATE, errorMessage: `Could not find user with token: ${ token }`, formData: { ...data } } satisfies IAttendEventState as IAttendEventState
-
-    if (!await verifyToken(data.token, client.getToken())) return { ...prevState, ...ATTEND_EVENT_INIT_STATE, errorMessage: `Could not verify token. Please check it and try entering it again.`, formData: { ...data } } satisfies IAttendEventState as IAttendEventState
-
-    const respons = await attendEvent(id, { attendees: { connect: [client.getDocumentId()] } })
-
-    if(!respons) return { ...prevState, ...ATTEND_EVENT_INIT_STATE, errorMessage: 'Ops! Something went wrong. Please try again.', formData: { ...data } } satisfies IAttendEventState as IAttendEventState
+    if (event.host?.documentId === client.getDocumentId()) return { ...ATTEND_EVENT_INIT_STATE, errorMessage: `Host automatically attends their events, they can't register as an additional attendee.`, formData: { ...data } } satisfies IAttendEventState as IAttendEventState
     
-    if(respons.error) return { ...prevState, ...ATTEND_EVENT_INIT_STATE, strapiErrors: respons.error, errorMessage: 'Failed to create a new event.', formData: { ...data } } satisfies IAttendEventState as IAttendEventState
+    if (event.attendees?.find(c => c.documentId === client.getDocumentId())) return { ...ATTEND_EVENT_INIT_STATE, errorMessage: `You are already registerd as an attendee, ${ client.getName() }`, formData: { ...data } } satisfies IAttendEventState as IAttendEventState
 
-    return { ...prevState, ...ATTEND_EVENT_INIT_STATE, successMessage: `1` } satisfies IAttendEventState as IAttendEventState
+    if (!await verifyToken(token, client.getToken())) return { ...ATTEND_EVENT_INIT_STATE, errorMessage: `Could not verify token. Please check it and try entering it again.`, formData: { ...data } } satisfies IAttendEventState as IAttendEventState
+
+    const respons = await attendEvent(event.documentId, { attendees: { connect: [client.getDocumentId()] } })
+
+    if(!respons) return { ...ATTEND_EVENT_INIT_STATE, errorMessage: 'Ops! Something went wrong. Please try again.', formData: { ...data } } satisfies IAttendEventState as IAttendEventState
+    
+    if(respons.error || !respons.data) return { ...ATTEND_EVENT_INIT_STATE, strapiErrors: respons.error, errorMessage: 'Failed to Update the event with a new attendee.', formData: { ...data } } satisfies IAttendEventState as IAttendEventState
+
+    return { ...ATTEND_EVENT_INIT_STATE, successMessage: `Congratulations, you, ${ client.getName() }, are now registered as an attendee for this event.`, updatedEvent: respons.data as IEvent } satisfies IAttendEventState as IAttendEventState
 }

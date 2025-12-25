@@ -1,7 +1,6 @@
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import qs from 'qs'
-import { object } from 'zod'
 
 export class BaseService {
     private ax: AxiosInstance
@@ -22,5 +21,5 @@ export class BaseService {
 
     post = async <T>(endpoint: string, data: object) => (await this.ax.post<T>(endpoint, JSON.stringify({ data }), { headers: { 'Content-Type': 'application/json' } })).data
 
-    put = async <T>(endpoint: string, data: object) => (await this.ax.put<T>(endpoint, JSON.stringify({ data }), { headers: { 'Content-Type': 'application/json' } })).data
+    put = async <T>(endpoint: string, data: object, params?: object) => (await this.ax.put<T>(endpoint, JSON.stringify({ data }), { params, headers: { 'Content-Type': 'application/json' } })).data
 }

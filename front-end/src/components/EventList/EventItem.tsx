@@ -2,13 +2,12 @@ import styles from './eventList.module.css'
 import buttonStyles from './detailsButton.module.css'
 import { IEvent } from '@/models/Event'
 import React, { useState } from 'react'
-import { Icon } from '@iconify/react'
 import { IBGGDBRow } from '@/models/BGGDB'
 import DetailsButton from './DetailsButton'
-import AttendEventForm from '../AttendForm/AttendEventForm'
+import AttendEventForm from '@/components/AttendForm/AttendEventForm'
 
-export default function EventItem({ event, gameName }: { event: IEvent, gameName: IBGGDBRow['name'] }) {
-    const [isDetailsOpened, setIsDetailsOpened] = useState(false), toggleDetails = () => { setIsDetailsOpened(!isDetailsOpened) }
+export default function EventItem({ eventIn, gameName }: { eventIn: IEvent, gameName: IBGGDBRow['name'] }) {
+    const [event, setEvent] = useState(eventIn), [isDetailsOpened, setIsDetailsOpened] = useState(false), toggleDetails = () => { setIsDetailsOpened(!isDetailsOpened) }
 
     return <li id={ event.documentId } className={ styles.event }>
         <h4>{ gameName } @{ event.location }</h4>
@@ -27,13 +26,13 @@ export default function EventItem({ event, gameName }: { event: IEvent, gameName
                 { event.description }
             </p>
             <div className={ styles.attendeeRow }>
-                <p>Attending: { event.attendees?.map((c, i, a) => <React.Fragment  key={ c.documentId }><span>{ c.name }</span>{ i !== --a.length && ','}</React.Fragment>) }</p>
+                <p>Attending: { event.attendees?.map((c, i, a) => <React.Fragment key={ c.documentId }><span>{ c.name }</span>{ i !== --a.length && ', '}</React.Fragment>) }</p>
                 <div>
                     <div>
                         <DetailsButton icon='system-uicons:push-up' onClick={ toggleDetails }/>
                     </div>
                     <div className={ styles.attendContainer }>
-                        <AttendEventForm event={ event }/>
+                        <AttendEventForm event={ event } setEvent={ setEvent }/>
                     </div>
                 </div>
             </div>

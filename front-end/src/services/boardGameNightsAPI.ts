@@ -26,7 +26,7 @@ export default class BoardGameNightsAPI {
 
     getEvents = async () => await this.service.get<IStrapiResponse<IEvent>>(this.ENDPOINTS.EVENTS, this.POPULATE.EVENTS)
 
-    attendEvent = async (id: IEvent['documentId'], data: IInputTypes['attendEvent']) => { return this.service.put<IStrapiResponse<IEvent>>(`${ this.ENDPOINTS.EVENTS }/${ id }`, data) }
+    attendEvent = async (id: IEvent['documentId'], data: IInputTypes['attendEvent']) => { return this.service.put<IStrapiResponse<IEvent>>(`${ this.ENDPOINTS.EVENTS }/${ id }`, data, this.POPULATE.EVENTS) }
 
     createClient = async (data: IInputTypes['createClient']) => await this.service.post<IStrapiResponse<IClient>>(this.ENDPOINTS.CLIENTS, data)
     

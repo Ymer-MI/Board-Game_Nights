@@ -27,5 +27,5 @@ interface IStrapiError {
 }
 
 export default interface IStrapiResponse<T> extends IMeta, IStrapiError {
-    data: (T & IData)[] | null
+    data: null | T & IData | (T & IData)[]
 }

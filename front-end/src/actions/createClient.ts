@@ -23,7 +23,7 @@ const createClientSchema = z.object({
 export interface ICreateClientState extends IFormState<ZodFieldErrors<typeof createClientSchema.shape>, z.infer<typeof createClientSchema>> {}
 
 export default async function createClientAction(prevState: ICreateClientState, formData: FormData) {
-    const data = getFormData(formData), validatedFields = createClientSchema.safeParse(data)
+    const data = getFormData<ICreateClientState['formData']>(formData), validatedFields = createClientSchema.safeParse(data)
 
     if (!validatedFields.success) return { ...prevState, ...CREATE_CLIENT_INIT_STATE, zodErrors: formatZodErrors(z.treeifyError(validatedFields.error).properties), formData: { ...data } } as ICreateClientState
 
