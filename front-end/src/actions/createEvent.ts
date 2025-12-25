@@ -4,7 +4,7 @@ import { formatZodErrors, getFormData } from '@/helpers/actionHelpers'
 import IFormState from '@/models/IFormState'
 import { CREATE_EVENT_INIT_STATE } from '@/components/CreateEventForm/CreateEventForm'
 import { createEvent, getClient, getToken, verifyToken } from '@/helpers/serverFunctions'
-import Client from '@/models/Client'
+import Client, { IClient } from '@/models/Client'
 
 const createEventSchema = z.object({
     token: z.string().min(128, 'Token is to short, should be minimum 128 characters long. Did you copy and paste it correctly?'),
@@ -35,7 +35,7 @@ export default async function createEventAction(prevState: ICreateEventState, fo
     if(!validatedFields.success) return { ...prevState, ...CREATE_EVENT_INIT_STATE, zodErrors:  formatZodErrors(z.treeifyError(validatedFields.error).properties), formData: { ...data } } as ICreateEventState
 
     const { token, location, dateTime, gameID, description, passWord, playersMin, playersMax } = validatedFields.data,
-    eventToken = await getToken(passWord), host = (await getClient(token)).data?.map(c => new Client(c))[0]
+    eventToken = await getToken(passWord), host = ((await getClient(token)).data as IClient[])?.map(c => new Client(c))[0]
 
     if(!host) return { ...prevState, ...CREATE_EVENT_INIT_STATE, errorMessage: `Could not find user with token: ${ token }`, formData: { ...data } } as ICreateEventState
 

@@ -6,7 +6,6 @@ import { ATTEND_EVENT_INIT_STATE } from '@/components/AttendForm/AttendEventForm
 import { attendEvent, getClient, verifyToken } from '@/helpers/serverFunctions'
 import Client, { IClient } from '@/models/Client'
 import { IEvent } from '@/models/Event'
-import IStrapiResponse from '@/models/IStrapiResponse'
 
 const attendEventSchema = z.object({
     event: z.string(),

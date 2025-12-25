@@ -26,7 +26,7 @@ export default function EventItem({ eventIn, gameName }: { eventIn: IEvent, game
                 { event.description }
             </p>
             <div className={ styles.attendeeRow }>
-                <p>Attending: { event.attendees?.map((c, i, a) => <React.Fragment key={ c.documentId }><span>{ c.name }</span>{ i !== --a.length && ', '}</React.Fragment>) }</p>
+                <p>Attending: { event.attendees?.map((c, i, a) => <React.Fragment key={ c.documentId }><span>{ c.name }</span>{ i !== a.length - 1 && ', '}</React.Fragment>) }</p>
                 <div>
                     <div>
                         <DetailsButton icon='system-uicons:push-up' onClick={ toggleDetails }/>
