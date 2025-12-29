@@ -5,19 +5,20 @@
     flex-direction: column;
     align-items: center;
     gap: 1em;
-    padding: 1em;
 
     > * {
         width: 100%;
     }
 
     .inputGroups {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, var(--width--grid-items));
-        justify-content: stretch;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
         gap: 1em;
 
         @media(min-width: 768px) {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, var(--width--grid-items));
             justify-content: space-between;
         }
 

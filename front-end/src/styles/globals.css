@@ -99,8 +99,8 @@ body {
         cursor: pointer;
 
         > svg {
-            width: 1em;
-            height: 1em;
+            height: 1.5em;
+            font-weight: bold;
         }
     }
 }

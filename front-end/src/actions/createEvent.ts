@@ -5,6 +5,7 @@ import IFormState from '@/models/IFormState'
 import { CREATE_EVENT_INIT_STATE } from '@/components/CreateEventForm/CreateEventForm'
 import { createEvent, getClient, getToken, verifyToken } from '@/helpers/serverFunctions'
 import Client, { IClient } from '@/models/Client'
+import { IEvent } from '@/models/Event'
 
 const createEventSchema = z.object({
     token: z.string().min(128, 'Token is to short, should be minimum 128 characters long. Did you copy and paste it correctly?'),
@@ -24,7 +25,9 @@ const createEventSchema = z.object({
     })
 })
 
-export interface ICreateEventState extends IFormState<ZodFieldErrors<typeof createEventSchema.shape>, z.infer<typeof createEventSchema>> {}
+export interface ICreateEventState extends IFormState<ZodFieldErrors<typeof createEventSchema.shape>, z.infer<typeof createEventSchema>> {
+    newEvent?: IEvent
+}
 
 export default async function createEventAction(prevState: ICreateEventState, formData: FormData) {
     const data = (d => { 
@@ -49,5 +52,5 @@ export default async function createEventAction(prevState: ICreateEventState, fo
 
     if(respons.error) return { ...prevState, ...CREATE_EVENT_INIT_STATE, strapiErrors: respons.error, errorMessage: 'Failed to create a new event.', formData: { ...data } } as ICreateEventState
 
-    return { ...prevState, ...CREATE_EVENT_INIT_STATE, successMessage: `New user created successfully!\n\nHere is your token (needed to alter the event):\n\n${ eventToken }` } as ICreateEventState
+    return { ...prevState, ...CREATE_EVENT_INIT_STATE, successMessage: `New user created successfully!\n\nHere is your token (needed to alter the event):\n\n${ eventToken }`, newEvent: respons.data as IEvent } as ICreateEventState
 }
