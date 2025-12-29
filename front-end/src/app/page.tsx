@@ -11,6 +11,7 @@ import EventList from '../components/EventList/EventList'
 import CreateClientForm from '@/components/CreateClientForm/CreateClientForm'
 import CreateEventForm from '@/components/CreateEventForm/CreateEventForm'
 import Modal, { IModalContent } from '@/components/Modal/Modal'
+import { Icon } from '@iconify/react'
 
 interface IModalState {
     isOpen: boolean
@@ -26,7 +27,7 @@ export default function Home() {
     const [events, setEvents] = useState<IEvent[]>([]), [modalState, setModalState] = useState<IModalState>(DEFAULT_MODAL_STATE), modal = {
         close: () => { setModalState(DEFAULT_MODAL_STATE) },
         open: (content: IModalContent) => { setModalState({ isOpen: true, content: Object.assign(content, { title: ['event', 'client'].includes(content.title.toLowerCase()) ? `Create ${ content.title }` : content.title, cancelButtonText: content.cancelButtonText ?? 'Close' }) }) }
-    }
+    }, addEvent = (event: IEvent) => { setEvents([...events, event]) }, createIcon = <Icon icon='system-uicons:mail-new' rotate={ 45 }/>
 
     useEffect(() => { !events.length && (async () => { setEvents((await getEvents()).data as IEvent[]) })() })
 
@@ -36,8 +37,8 @@ export default function Home() {
         {/* <GamesList BGGDB={ BGGDB } itemsToDisplay={ 5 }/> */}
         {/* <LogButton str={JSON.stringify(BGGDB.getDB())}/> */}
         <div className={ styles.buttonRow }>
-            <button onClick={() => modal.open({ title: 'Client', content: <CreateClientForm /> })}>Create Client</button>
-            <button onClick={() => modal.open({ title: 'Event', content: <CreateEventForm /> })}>Create Event</button>
+            <button onClick={() => modal.open({ title: 'Client', content: <CreateClientForm /> })}>Create Client { createIcon }</button>
+            <button onClick={() => modal.open({ title: 'Event', content: <CreateEventForm addEvent={ addEvent } /> })}>Create Event { createIcon }</button>
         </div>
         <EventList events={ events }/>
         { modalState.isOpen && modalState.content && <Modal title={ modalState.content.title } content={ modalState.content.content } cancelButtonText={ modalState.content.cancelButtonText } successButton={ modalState.content.successButton } onclose={ modal.close } /> }

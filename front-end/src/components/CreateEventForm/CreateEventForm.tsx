@@ -1,25 +1,28 @@
 'use client'
 
 import styles from './createEventForm.module.css'
-import { useActionState, useRef } from 'react'
+import { useActionState, useEffect, useRef } from 'react'
 import createEventAction, { ICreateEventState } from '@/actions/createEvent'
 import { Icon } from '@iconify/react'
 import InputGroup from '@/components/InputGroup'
 import MessageBox, { MESSAGETYPE } from '@/components/MessageBox/MessageBox'
 import { searchByName } from '@/helpers/serverFunctions'
+import { IEvent } from '@/models/Event'
 
 export const CREATE_EVENT_INIT_STATE: ICreateEventState = {
     strapiErrors: undefined,
     errorMessage: undefined,
     successMessage: undefined,
     zodErrors: undefined,
-    formData: { token: '', location: '', dateTime: new Date(), gameID: 0, description: '', passWord: '', passConf: '', playersMin: undefined, playersMax: undefined }
+    formData: { token: '', location: '', dateTime: new Date(), gameID: 0, description: '', passWord: '', passConf: '', playersMin: undefined, playersMax: undefined },
+    newEvent: undefined
 }
 
-export default function CreateEventForm() {
+export default function CreateEventForm({ addEvent }: { addEvent: (event: IEvent) => void }) {
     const [formState, formAction] = useActionState(createEventAction, CREATE_EVENT_INIT_STATE), { zodErrors, errorMessage, successMessage } = formState, strapiErrors = formState?.strapiErrors?.message,
-    ref = useRef<HTMLFormElement>(null), { 
-        token, location, dateTime, gameID, description, passWord, passConf, playersMin, playersMax } = formState.formData
+    ref = useRef<HTMLFormElement>(null), { token, location, dateTime, gameID, description, passWord, passConf, playersMin, playersMax } = formState.formData
+
+    useEffect(() => { formState.newEvent && addEvent(formState.newEvent) })
     
     return <form id={ styles.createEvent } ref={ ref } action={ formAction }>
         <div className={ styles.inputGroups }>
