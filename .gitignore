@@ -1,7 +1,8 @@
 # user-specific files
-.vscode/
 package-lock.json
+yarn.lock
 pnpm-lock.yaml
+pnpm-workspace.yaml
 *.kra
 *.*~
 .vscode/
