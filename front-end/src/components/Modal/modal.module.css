@@ -33,7 +33,7 @@
         button {
             border: none;
             border-radius: var(--radius);
-            padding: 0 inherit;
+            padding: 0;
             background-color: var(--color--orange-light);
             color: var(--color--black-dark);
         }
@@ -50,7 +50,7 @@
         .actionButton {
             border: none;
             border-radius: var(--radius);
-            padding: 0 inherit;
+            padding: 0 .25em;
 
             &.primary {
                 background-color: var(--color--green);

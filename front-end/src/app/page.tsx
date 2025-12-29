@@ -1,5 +1,6 @@
 'use client'
 
+import styles from './page.module.css'
 import { IEvent } from '@/models/Event'
 import { getEvents } from '@/helpers/serverFunctions'
 import { useEffect, useState } from 'react'
@@ -11,15 +12,21 @@ import CreateClientForm from '@/components/CreateClientForm/CreateClientForm'
 import CreateEventForm from '@/components/CreateEventForm/CreateEventForm'
 import Modal, { IModalContent } from '@/components/Modal/Modal'
 
+interface IModalState {
+    isOpen: boolean
+    content: IModalContent | null
+}
+
+const DEFAULT_MODAL_STATE = {
+    isOpen: false,
+    content: null
+} as IModalState
+
 export default function Home() {
-    const [events, setEvents] = useState<IEvent[]>([]), [isOpen, setIsOpen] = useState(false), [modalContent, setModalContent] = useState<IModalContent | null>(null),
-    openModal = (content: IModalContent) => { 
-        setModalContent(Object.assign(content, {
-            title: ['event', 'client'].includes(content.title.toLowerCase()) ? `Create ${ content.title }` : content.title,
-            cancelButtonText: content.cancelButtonText ?? 'Close'
-        })) 
-        setIsOpen(true)
-    }, closeModal = () => { setIsOpen(false); setModalContent(null) }
+    const [events, setEvents] = useState<IEvent[]>([]), [modalState, setModalState] = useState<IModalState>(DEFAULT_MODAL_STATE), modal = {
+        close: () => { setModalState(DEFAULT_MODAL_STATE) },
+        open: (content: IModalContent) => { setModalState({ isOpen: true, content: Object.assign(content, { title: ['event', 'client'].includes(content.title.toLowerCase()) ? `Create ${ content.title }` : content.title, cancelButtonText: content.cancelButtonText ?? 'Close' }) }) }
+    }
 
     useEffect(() => { !events.length && (async () => { setEvents((await getEvents()).data as IEvent[]) })() })
 
@@ -28,13 +35,11 @@ export default function Home() {
         {/* <ServerStatus status={ await (async () => { const r = await DB.Strapi.ping(); r.status.toString().match(/^-1$/) && console.error('Error pinging server:', r.statusText); return r.status.toString().startsWith('2') && r.statusText.match(/^OK$/) ? 'Online' : 'Offline' })() }/> */}
         {/* <GamesList BGGDB={ BGGDB } itemsToDisplay={ 5 }/> */}
         {/* <LogButton str={JSON.stringify(BGGDB.getDB())}/> */}
-        <div style={{ display: 'flex', justifyContent: 'end', gap: '1em'}}>
-            <button onClick={() => openModal({ title: 'Client', content: <CreateClientForm /> })}>Create Client</button>
-            <button onClick={() => openModal({ title: 'Event', content: <CreateEventForm /> })}>Create Event</button>
+        <div className={ styles.buttonRow }>
+            <button onClick={() => modal.open({ title: 'Client', content: <CreateClientForm /> })}>Create Client</button>
+            <button onClick={() => modal.open({ title: 'Event', content: <CreateEventForm /> })}>Create Event</button>
         </div>
         <EventList events={ events }/>
-        { isOpen && modalContent && <Modal title={ modalContent.title } content={ modalContent.content } cancelButtonText={ modalContent.cancelButtonText } successButton={ modalContent.successButton } onclose={ closeModal } /> }
-        {/* <CreateClientForm/> */}
-        {/* <CreateEventForm/> */}
+        { modalState.isOpen && modalState.content && <Modal title={ modalState.content.title } content={ modalState.content.content } cancelButtonText={ modalState.content.cancelButtonText } successButton={ modalState.content.successButton } onclose={ modal.close } /> }
     </section>
 }

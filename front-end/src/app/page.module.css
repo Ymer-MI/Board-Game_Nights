@@ -1,0 +1,10 @@
+.buttonRow {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin: 0 0 .5em;
+
+    @media (min-width: 768px) {
+        justify-content: end;
+    }
+}
