@@ -1,53 +1,51 @@
 .formContainer {
     display: block;
-}
-
-.attendEvent {
-    --width--grid-items: 200px;
-
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: end;
-    gap: 1em;
-
-    @media (min-width: 768px) {
-        flex-direction: row;
-    }
-
-    .inputGroups {
-        display: grid;
-        grid-template-columns: 1fr;
-        justify-content: stretch;
+    
+    .attendEvent {
+        --width--grid-items: 200px;
+    
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: end;
         gap: 1em;
-
-        @media(min-width: 768px) {
-            flex: 1;
+    
+        @media (min-width: 768px) {
+            flex-direction: row;
         }
-
-        .inputGroup {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: .1em;
-
-            > input {
-                height: 1.75em;
+    
+        .inputGroups {
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-content: stretch;
+            gap: 1em;
+    
+            @media(min-width: 768px) {
+                flex: 1;
+            }
+    
+            .inputGroup {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: .1em;
             }
         }
-    }
-
-    .buttonRow {
-        display: flex;
-        justify-content: space-between;
-        gap: 1em;
-
-        @media(min-width: 768px) {
-            justify-content: end;
-        }
-
-        button {
-            font-size: 1em;
+    
+        .buttonRow {
+            display: flex;
+            justify-content: space-between;
+            gap: 1em;
+    
+            @media(min-width: 768px) {
+                justify-content: end;
+                align-self: stretch;
+                align-items: end;
+            }
+    
+            button {
+                font-size: 1em;
+            }
         }
     }
 }

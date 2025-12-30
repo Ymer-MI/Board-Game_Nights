@@ -29,7 +29,7 @@
                 gap: var(--gap--default);
                 padding: var(--padding--default);
                 border-radius: var(--border-radius--default);
-                background-color: color-mix(in srgb, var(--color--purple), transparent 50%);
+                background-color: color-mix(in srgb, var(--color--purple-dark), transparent 50%);
                 color: var(--color--green-light);
             
                 h4 {
