@@ -9,7 +9,7 @@
     }
 
     button {
-        background-color: var(--color--purple);
+        background-color: var(--color--purple-dark);
         color: var(--color--green-light);
     }
 }

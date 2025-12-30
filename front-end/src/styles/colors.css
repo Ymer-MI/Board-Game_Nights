@@ -17,6 +17,7 @@
     --color--red-dark: #950000;
 
     --color--purple: #8000ff;
+    --color--purple-dark: #5D00BB;
 
     --color--background: var(--color--black-dark);
     --color--foreground: var(--color--green);
