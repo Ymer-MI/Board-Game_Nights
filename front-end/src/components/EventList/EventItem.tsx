@@ -21,7 +21,7 @@ export default function EventItem({ eventIn, gameName }: { eventIn: IEvent, game
                 <DetailsButton className={ isDetailsOpened && buttonStyles.hidden } icon='system-uicons:pull-down' onClick={ toggleDetails }/>
             </div>
         </div>
-        <section className={ `${ styles.description } ${ !isDetailsOpened && styles.hidden }` }>
+        <div className={ `${ styles.description } ${ !isDetailsOpened && styles.hidden }` }>
             <p>
                 { event.description }
             </p>
@@ -36,6 +36,6 @@ export default function EventItem({ eventIn, gameName }: { eventIn: IEvent, game
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </li>
 }
