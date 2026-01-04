@@ -12,6 +12,7 @@ import CreateClientForm from '@/components/CreateClientForm/CreateClientForm'
 import CreateEventForm from '@/components/CreateEventForm/CreateEventForm'
 import Modal, { IModalContent } from '@/components/Modal/Modal'
 import { Icon } from '@iconify/react'
+import UsagePage from './usage/page'
 
 interface IModalState {
     isOpen: boolean
@@ -37,8 +38,9 @@ export default function Home() {
         {/* <GamesList BGGDB={ BGGDB } itemsToDisplay={ 5 }/> */}
         {/* <LogButton str={JSON.stringify(BGGDB.getDB())}/> */}
         <div className={ styles.buttonRow }>
-            <button onClick={() => modal.open({ title: 'Client', content: <CreateClientForm /> })}>Create Client { createIcon }</button>
+            <button onClick={() => modal.open({ title: 'User', content: <CreateClientForm /> })}>Create User { createIcon }</button>
             <button onClick={() => modal.open({ title: 'Event', content: <CreateEventForm addEvent={ addEvent } /> })}>Create Event { createIcon }</button>
+            <button onClick={() => modal.open({ title: 'How To Use:', content: <UsagePage /> })}>How To Use <Icon icon='system-uicons:question-circle'></Icon></button>
         </div>
         <EventList events={ events }/>
         { modalState.isOpen && modalState.content && <Modal title={ modalState.content.title } content={ modalState.content.content } cancelButtonText={ modalState.content.cancelButtonText } successButton={ modalState.content.successButton } onclose={ modal.close } /> }
